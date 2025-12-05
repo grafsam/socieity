@@ -22,6 +22,7 @@ const SAMPLE_TEXT = `【題目】
 
 const InputSection: React.FC<InputSectionProps> = ({ input, setInput, onAnalyze, isAnalyzing }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
   const handleTextChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setInput(prev => ({ ...prev, text: e.target.value }));
@@ -29,6 +30,10 @@ const InputSection: React.FC<InputSectionProps> = ({ input, setInput, onAnalyze,
 
   const handleLoadExample = () => {
     setInput(prev => ({ ...prev, text: SAMPLE_TEXT }));
+    // Slightly delay focus to ensure state update has propagated if needed, though usually immediate is fine
+    setTimeout(() => {
+      textAreaRef.current?.focus();
+    }, 0);
   };
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -79,6 +84,7 @@ const InputSection: React.FC<InputSectionProps> = ({ input, setInput, onAnalyze,
         </div>
         <textarea
           id="questionText"
+          ref={textAreaRef}
           className="w-full h-48 p-4 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-slate-700 placeholder-slate-400 bg-slate-50 transition-colors text-sm leading-relaxed"
           placeholder="請在此輸入題幹敘述，或點擊上方「載入範例」..."
           value={input.text}
