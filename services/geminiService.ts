@@ -214,7 +214,9 @@ export const analyzeQuestion = async (text: string, file: File | null): Promise<
     });
 
     if (response.text) {
-      return JSON.parse(response.text) as AnalysisResult;
+      // Remove any markdown formatting if present (e.g., ```json ... ```)
+      const cleanText = response.text.replace(/```json|```/g, '').trim();
+      return JSON.parse(cleanText) as AnalysisResult;
     } else {
       throw new Error("No response text received from Gemini.");
     }
