@@ -38,10 +38,10 @@ const App: React.FC = () => {
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 pb-12">
       {/* Navbar */}
-      <nav className="bg-white border-b border-slate-200 sticky top-0 z-50">
+      <nav className="bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50 print:hidden">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="bg-indigo-600 p-2 rounded-lg text-white">
+            <div className="bg-indigo-600 p-2 rounded-lg text-white shadow-md">
               <PenTool size={20} />
             </div>
             <h1 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-700 to-blue-600">
@@ -58,8 +58,8 @@ const App: React.FC = () => {
       <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           
-          {/* Left Column: Input */}
-          <div className="lg:col-span-5 space-y-6">
+          {/* Left Column: Input (Hidden when printing if result exists) */}
+          <div className={`lg:col-span-5 space-y-6 ${result ? 'print:hidden' : ''}`}>
             <div className="bg-indigo-50 border border-indigo-100 rounded-lg p-4 mb-4">
               <h2 className="text-indigo-800 font-bold mb-2 text-sm uppercase tracking-wide">使用說明</h2>
               <p className="text-sm text-indigo-700 leading-relaxed">
@@ -74,8 +74,8 @@ const App: React.FC = () => {
             />
           </div>
 
-          {/* Right Column: Output */}
-          <div className="lg:col-span-7">
+          {/* Right Column: Output (Full width when printing) */}
+          <div className={`lg:col-span-7 ${result ? 'print:col-span-12 print:w-full' : ''}`}>
             {error && (
               <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6 flex items-center gap-2">
                 <Info className="w-5 h-5" />
@@ -86,7 +86,7 @@ const App: React.FC = () => {
             {result ? (
               <AnalysisReport result={result} />
             ) : (
-              <div className="h-full min-h-[400px] flex flex-col items-center justify-center text-slate-400 border-2 border-dashed border-slate-200 rounded-xl bg-slate-50/50">
+              <div className="h-full min-h-[400px] flex flex-col items-center justify-center text-slate-400 border-2 border-dashed border-slate-200 rounded-xl bg-slate-50/50 print:hidden">
                 <PenTool className="w-16 h-16 mb-4 opacity-20" />
                 <p className="text-lg font-medium">尚無分析結果</p>
                 <p className="text-sm mt-2">請在左側輸入或上傳題目以開始分析</p>
@@ -96,7 +96,7 @@ const App: React.FC = () => {
         </div>
       </main>
       
-      <footer className="max-w-6xl mx-auto px-4 text-center text-slate-400 text-sm mt-8">
+      <footer className="max-w-6xl mx-auto px-4 text-center text-slate-400 text-sm mt-8 print:hidden">
         © {new Date().getFullYear()} Social Studies Assessment Analyst. Based on principles by NAER.
       </footer>
     </div>

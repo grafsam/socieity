@@ -1,5 +1,5 @@
 import React, { ChangeEvent, useRef } from 'react';
-import { Upload, X, FileText, Image as ImageIcon, FileType } from 'lucide-react';
+import { Upload, X, FileText, Image as ImageIcon, FileType, Sparkles } from 'lucide-react';
 import { QuestionInput } from '../types';
 
 interface InputSectionProps {
@@ -9,11 +9,26 @@ interface InputSectionProps {
   isAnalyzing: boolean;
 }
 
+const SAMPLE_TEXT = `【題目】
+小明在網路上看到一則新聞報導，標題寫著：「立法院三讀通過修正案，降低投票年齡至18歲。」
+請問：這項修正案通過後，小明（19歲）可以行使下列哪一項權利？
+(A) 罷免總統
+(B) 參加公務人員考試
+(C) 登記參選立法委員
+(D) 簽署公民投票提案
+
+【老師說明】
+此題希望能結合時事，測驗學生對於參政權年齡限制的理解。希望確認題目是否符合素養導向命題原則，情境是否適切。`;
+
 const InputSection: React.FC<InputSectionProps> = ({ input, setInput, onAnalyze, isAnalyzing }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleTextChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setInput(prev => ({ ...prev, text: e.target.value }));
+  };
+
+  const handleLoadExample = () => {
+    setInput(prev => ({ ...prev, text: SAMPLE_TEXT }));
   };
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -47,14 +62,24 @@ const InputSection: React.FC<InputSectionProps> = ({ input, setInput, onAnalyze,
   return (
     <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 transition-all duration-300 hover:shadow-md">
       <div className="mb-6">
-        <label htmlFor="questionText" className="block text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
-          <FileText className="w-4 h-4" />
-          試題文字 / 題幹 (Optional Text)
-        </label>
+        <div className="flex justify-between items-center mb-2">
+          <label htmlFor="questionText" className="text-sm font-semibold text-slate-700 flex items-center gap-2">
+            <FileText className="w-4 h-4" />
+            試題文字 / 題幹 (Optional Text)
+          </label>
+          <button
+            onClick={handleLoadExample}
+            disabled={isAnalyzing}
+            className="text-xs flex items-center gap-1 text-indigo-600 hover:text-indigo-800 font-medium px-2 py-1 rounded-md hover:bg-indigo-50 transition-colors"
+          >
+            <Sparkles className="w-3 h-3" />
+            載入範例 (Example)
+          </button>
+        </div>
         <textarea
           id="questionText"
-          className="w-full h-32 p-4 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-slate-700 placeholder-slate-400 bg-slate-50 transition-colors"
-          placeholder="請在此輸入題幹敘述，或僅上傳檔案..."
+          className="w-full h-48 p-4 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-slate-700 placeholder-slate-400 bg-slate-50 transition-colors text-sm leading-relaxed"
+          placeholder="請在此輸入題幹敘述，或點擊上方「載入範例」..."
           value={input.text}
           onChange={handleTextChange}
         />
@@ -69,16 +94,16 @@ const InputSection: React.FC<InputSectionProps> = ({ input, setInput, onAnalyze,
         {!input.file ? (
           <div 
             onClick={() => fileInputRef.current?.click()}
-            className="border-2 border-dashed border-slate-300 rounded-lg h-40 flex flex-col items-center justify-center cursor-pointer hover:bg-slate-50 hover:border-blue-400 transition-all group"
+            className="border-2 border-dashed border-slate-300 rounded-lg h-32 flex flex-col items-center justify-center cursor-pointer hover:bg-slate-50 hover:border-blue-400 transition-all group"
           >
-            <div className="bg-blue-50 p-3 rounded-full mb-3 group-hover:scale-110 transition-transform">
-               <FileType className="w-6 h-6 text-blue-500" />
+            <div className="bg-blue-50 p-2 rounded-full mb-2 group-hover:scale-110 transition-transform">
+               <FileType className="w-5 h-5 text-blue-500" />
             </div>
             <span className="text-sm font-medium text-slate-700 group-hover:text-blue-600">
               點擊上傳檔案
             </span>
             <span className="text-xs text-slate-400 mt-1">
-              支援 PDF 文件或 JPG/PNG 圖片
+              PDF, JPG, PNG
             </span>
           </div>
         ) : (
@@ -96,7 +121,7 @@ const InputSection: React.FC<InputSectionProps> = ({ input, setInput, onAnalyze,
                  <img 
                   src={input.filePreview} 
                   alt="Preview" 
-                  className="max-h-64 object-contain rounded"
+                  className="max-h-48 object-contain rounded"
                 />
               </div>
             ) : (

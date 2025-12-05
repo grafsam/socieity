@@ -1,6 +1,6 @@
 import React from 'react';
 import { AnalysisResult, AssessmentCriteria, QuestionImprovement } from '../types';
-import { CheckCircle2, AlertCircle, TrendingUp, BrainCircuit, BookOpen, Target, Scale, ClipboardCheck, ArrowRight, FileEdit, ShieldCheck } from 'lucide-react';
+import { CheckCircle2, AlertCircle, TrendingUp, BrainCircuit, BookOpen, Target, Scale, ClipboardCheck, ArrowRight, FileEdit, ShieldCheck, Printer } from 'lucide-react';
 import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
 
 interface AnalysisReportProps {
@@ -43,7 +43,7 @@ const CriteriaCard: React.FC<{ criteria: AssessmentCriteria; icon: React.ReactNo
   }
 
   return (
-    <div className={`p-4 rounded-xl border ${statusColor} transition-all`}>
+    <div className={`p-4 rounded-xl border ${statusColor} transition-all break-inside-avoid`}>
       <div className="flex justify-between items-start mb-2">
         <div className="flex items-center gap-2">
           <div className={`p-2 rounded-lg bg-white shadow-sm ${iconColor}`}>
@@ -60,12 +60,12 @@ const CriteriaCard: React.FC<{ criteria: AssessmentCriteria; icon: React.ReactNo
 
 const QuestionImprovementCard: React.FC<{ improvement: QuestionImprovement }> = ({ improvement }) => {
   return (
-    <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
+    <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow break-inside-avoid">
       <div className="flex items-center gap-2 mb-2">
-        <span className="bg-indigo-100 text-indigo-700 text-xs font-bold px-2 py-1 rounded border border-indigo-200">
+        <span className="bg-indigo-100 text-indigo-700 text-xs font-bold px-2 py-1 rounded border border-indigo-200 flex-shrink-0">
           {improvement.questionId}
         </span>
-        <h5 className="font-bold text-slate-800 text-sm flex-1 truncate">{improvement.issue}</h5>
+        <h5 className="font-bold text-slate-800 text-sm flex-1">{improvement.issue}</h5>
       </div>
       <div className="flex gap-2 items-start mt-3 bg-slate-50 p-3 rounded-lg border border-slate-100">
         <ArrowRight className="w-4 h-4 text-emerald-500 mt-0.5 flex-shrink-0" />
@@ -87,9 +87,18 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ result }) => {
   const COLORS = result.overallScore >= 80 ? ['#10b981', '#ecfdf5'] : result.overallScore >= 60 ? ['#f59e0b', '#fffbeb'] : ['#ef4444', '#fef2f2'];
 
   return (
-    <div className="space-y-6 animate-fade-in-up">
+    <div className="space-y-6 animate-fade-in-up pb-10">
       {/* Header Summary */}
-      <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex flex-col md:flex-row gap-6 items-center">
+      <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex flex-col md:flex-row gap-6 items-center relative overflow-hidden">
+        {/* Print Button */}
+        <button 
+          onClick={() => window.print()}
+          className="absolute top-4 right-4 p-2 text-slate-400 hover:text-indigo-600 hover:bg-slate-50 rounded-full transition-all print:hidden"
+          title="列印報告 / 另存 PDF"
+        >
+          <Printer className="w-5 h-5" />
+        </button>
+
         <div className="relative w-40 h-40 flex-shrink-0">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
@@ -159,7 +168,7 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ result }) => {
 
       {/* Specific Question Improvements - NEW SECTION */}
       {result.questionImprovements && result.questionImprovements.length > 0 && (
-        <div className="bg-indigo-50 rounded-xl p-6 border border-indigo-100">
+        <div className="bg-indigo-50 rounded-xl p-6 border border-indigo-100 break-inside-avoid">
           <h4 className="flex items-center gap-2 text-indigo-800 font-bold mb-4">
             <FileEdit className="w-5 h-5" />
             個別試題修改建議 (Specific Question Improvements)
@@ -176,7 +185,7 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ result }) => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
         {/* Strengths */}
-        <div className="bg-emerald-50 rounded-xl p-6 border border-emerald-100">
+        <div className="bg-emerald-50 rounded-xl p-6 border border-emerald-100 break-inside-avoid">
           <h4 className="flex items-center gap-2 text-emerald-800 font-bold mb-4">
             <CheckCircle2 className="w-5 h-5" />
             優點 (Strengths)
@@ -192,7 +201,7 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ result }) => {
         </div>
 
         {/* Weaknesses */}
-        <div className="bg-red-50 rounded-xl p-6 border border-red-100">
+        <div className="bg-red-50 rounded-xl p-6 border border-red-100 break-inside-avoid">
           <h4 className="flex items-center gap-2 text-red-800 font-bold mb-4">
             <AlertCircle className="w-5 h-5" />
             待改進 (Weaknesses)
@@ -208,7 +217,7 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ result }) => {
         </div>
 
         {/* General Suggestions */}
-        <div className="bg-blue-50 rounded-xl p-6 border border-blue-100">
+        <div className="bg-blue-50 rounded-xl p-6 border border-blue-100 break-inside-avoid">
           <h4 className="flex items-center gap-2 text-blue-800 font-bold mb-4">
             <TrendingUp className="w-5 h-5" />
             整體建議 (General Suggestions)
