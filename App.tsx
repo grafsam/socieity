@@ -18,6 +18,7 @@ const App: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   const handleAnalyze = async () => {
+    // Validate Content
     if (!input.text.trim() && !input.file) return;
 
     setIsAnalyzing(true);
